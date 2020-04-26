@@ -267,4 +267,71 @@ router.post(
 	}
 );
 
+// @route   DELETE api/profile/experience/:exp_id
+// @desc    Delete an experience from the profile
+// @access  Private
+router.delete(
+	'/experience/:exp_id',
+	passport.authenticate('jwt', { session: false }),
+	(req, resp) => {
+		Profile.findOne({ user: req.user.id })
+			.then((profile) => {
+				// Get the index to remove the experience
+				const removeIndex = profile.experience
+					.map((item) => item.id)
+					.indexOf(req.params.exp_id);
+
+				// Splice out of array
+				if (!(removeIndex == -1)) {
+					profile.experience.splice(removeIndex, 1);
+				}
+
+				// Saving changes
+				profile.save().then((profile) => resp.json(profile));
+			})
+			.catch((err) => resp.status(404).json(err));
+	}
+);
+
+// @route   DELETE api/profile/education/:edu_id
+// @desc    Delete an education from the profile
+// @access  Private
+router.delete(
+	'/education/:edu_id',
+	passport.authenticate('jwt', { session: false }),
+	(req, resp) => {
+		Profile.findOne({ user: req.user.id })
+			.then((profile) => {
+				// Get the index to remove the experience
+				const removeIndex = profile.education
+					.map((item) => item.id)
+					.indexOf(req.params.edu_id);
+
+				// Splice out of array
+				if (!(removeIndex == -1)) {
+					profile.education.splice(removeIndex, 1);
+				}
+
+				// Saving changes
+				profile.save().then((profile) => resp.json(profile));
+			})
+			.catch((err) => resp.status(404).json(err));
+	}
+);
+
+// @route   DELETE api/profile
+// @desc    Delete user and profile
+// @access  Private
+router.delete(
+	'/',
+	passport.authenticate('jwt', { session: false }),
+	(req, resp) => {
+		Profile.findOneAndRemove({ user: req.user.id }).then(() => {
+			User.findOneAndRemove({ _id: req.user.id }).then(() =>
+				resp.json({ success: true })
+			);
+		});
+	}
+);
+
 module.exports = router;
