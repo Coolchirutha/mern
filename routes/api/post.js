@@ -145,10 +145,10 @@ router.post(
 
 		// Checking for errors
 		if (!isValid) {
-            // If any errors are found, send a 400 status
-            console.log('Hi, i am error')
+			// If any errors are found, send a 400 status
+			console.log('Hi, i am error');
 			return resp.status(400).json(errors);
-        }
+		}
 
 		Post.findById(req.params.id)
 			.then((post) => {
@@ -157,16 +157,58 @@ router.post(
 					name: req.body.name,
 					avatar: req.body.avatar,
 					user: req.user.id,
-				}
+				};
 
 				// Adding to the comments array
 				post.comments.unshift(newComment);
 
 				// Saving into database
-				post.save().then((post) => resp.json(post)).catch(err => resp.status(404).json(err));
+				post.save().then((post) => resp.json(post));
 			})
 			.catch((err) =>
 				resp.status(404).json({ postNotFound: 'No post found' })
+			);
+	}
+);
+
+// @route   DELETE api/post/comment/:id/:commentId
+// @desc    Delete comment on the specific post
+// @access  Private
+router.delete(
+	'/comment/:id/:commentId',
+	passport.authenticate('jwt', { session: false }),
+	(req, resp) => {
+		Post.findById(req.params.id)
+			.then((post) => {
+				// Checking to see if comment even exists
+				if (
+					post.comments.filter(
+						(comment) =>
+							comment._id.toString() === req.params.commentId
+					).length === 0
+				) {
+					// If it comes here then the comment doesn't exist
+					return resp.status(404).json({
+						commentDoesNotExist: 'Comment does not exist',
+					});
+				}
+
+				// If it passed the above test it means comment exists.
+				// Now deleting the comment
+				const indexToRemove = post.comments
+					.map((item) => item._id.toString())
+					.indexOf(req.params.commentId);
+
+				// Splicing the comment out of the array
+				post.comments.splice(indexToRemove, 1);
+
+				// Saving into database
+				post.save().then((post) => resp.json(post));
+			})
+			.catch((err) => {
+                console.log(err);
+                resp.status(404).json({ postNotFound: 'No post found' })
+            }
 			);
 	}
 );
