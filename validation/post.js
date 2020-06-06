@@ -15,12 +15,11 @@ module.exports = function validatePostInput(data) {
 	// Check to see if nothing is entered in the email field
 	if (Validator.isEmpty(data.text)) {
 		errors.text = 'Text field is required';
+    }
 
-		/*---------------   Input validation Ends ---------------*/
-
-		return {
-			errors,
-			isValid: isEmpty(errors),
-		};
-	}
+    /*---------------   Input validation Ends ---------------*/
+    return {
+        errors,
+        isValid: isEmpty(errors),
+    };
 };
