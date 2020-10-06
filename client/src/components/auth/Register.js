@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import classnames from 'classnames';
+import { connect } from 'react-redux';
+import { registerUser } from '../../actions/authActions';
 
 class Register extends Component {
 	constructor(props) {
 		super();
 		this.state = {
-			name: '',
+			firstName: '',
+			lastName: '',
 			email: '',
 			password: '',
 			password2: '',
@@ -25,22 +28,25 @@ class Register extends Component {
 		e.preventDefault();
 
 		const newUser = {
-			name: this.state.name,
+			firstName: this.state.firstName,
+			lastName: this.state.lastName,
 			email: this.state.email,
 			password: this.state.password,
 			password2: this.state.password2,
 		};
 
-		axios
-			.post('/api/users/register', newUser)
-			.then((user) => {
-				console.log(user);
-			})
-			.catch((err) => {
-				this.setState({
-					errors: err.response.data,
-				});
-			});
+		// axios
+		// 	.post('/api/users/register', newUser)
+		// 	.then((user) => {
+		// 		console.log(user);
+		// 	})
+		// 	.catch((err) => {
+		// 		this.setState({
+		// 			errors: err.response.data,
+		// 		});
+		// 	});
+
+		this.props.registerUser(newUser);
 	};
 
 	render() {
@@ -56,25 +62,53 @@ class Register extends Component {
 								Create your DMN Connects account
 							</p>
 							<form noValidate onSubmit={this.onSubmit}>
-								<div className='form-group'>
-									<input
-										type='text'
-										className={classnames(
-											'form-control form-control-lg',
-											{
-												'is-invalid': errors.name,
-											}
-										)}
-										placeholder='Name'
-										name='name'
-										value={this.state.name}
-										onChange={this.onChange}
-									/>
-									{errors.name && (
-										<div className='invalid-feedback'>
-											{errors.name}
+								<div className='row'>
+									<div className='col-6'>
+										<div className='form-group'>
+											<input
+												type='text'
+												className={classnames(
+													'form-control form-control-lg',
+													{
+														'is-invalid':
+															errors.firstName,
+													}
+												)}
+												placeholder='First Name'
+												name='firstName'
+												value={this.state.firstName}
+												onChange={this.onChange}
+											/>
+											{errors.firstName && (
+												<div className='invalid-feedback'>
+													{errors.firstName}
+												</div>
+											)}
 										</div>
-									)}
+									</div>
+									<div className='col-6'>
+										<div className='form-group'>
+											<input
+												type='text'
+												className={classnames(
+													'form-control form-control-lg',
+													{
+														'is-invalid':
+															errors.lastName,
+													}
+												)}
+												placeholder='Last Name'
+												name='lastName'
+												value={this.state.lastName}
+												onChange={this.onChange}
+											/>
+											{errors.lastName && (
+												<div className='invalid-feedback'>
+													{errors.lastName}
+												</div>
+											)}
+										</div>
+									</div>
 								</div>
 								<div className='form-group'>
 									<input
@@ -153,4 +187,4 @@ class Register extends Component {
 	}
 }
 
-export default Register;
+export default connect(null, { registerUser })(Register);
