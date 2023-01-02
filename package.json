@@ -1,0 +1,33 @@
+{
+  "name": "dmnconnect",
+  "version": "1.0.0",
+  "description": "Social network for DMN",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coolchirutha/mern.git"
+  },
+  "author": "Mouni Nischal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Coolchirutha/mern/issues"
+  },
+  "homepage": "https://github.com/Coolchirutha/mern#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.2",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
